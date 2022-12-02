@@ -1,0 +1,22 @@
+{% extends 'news/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Новости и статьи
+{% endblock title %}
+
+{% block content %}
+    <p>Всего новостей <b>{{ posts|length }}</b></p>
+    {% if posts %}
+        {% for post in posts %}
+            <div>
+                <h2><a href="{% url 'news:detail' post.id %}">{{ post.title|censor }}</a></h2>
+                <p>{{ post.created_at|date:"d.m.Y" }} / {{ post.author.user.username }}</p>
+                <p>{{ post.text|censor|truncatechars:50 }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h2>Список статей и новостей пуст =(</h2>
+    {% endif %}
+{% endblock content %}
