@@ -7,16 +7,47 @@
 {% endblock title %}
 
 {% block content %}
-    <p>Всего новостей <b>{{ posts|length }}</b></p>
+
+    <p>Всего новостей <b>{{ count }}</b></p>
+    <br>
+    <a href="{% url 'news:add_post' %}">Добавить статью / новость</a>
+    <hr>
     {% if posts %}
         {% for post in posts %}
             <div>
                 <h2><a href="{% url 'news:detail' post.id %}">{{ post.title|censor }}</a></h2>
                 <p>{{ post.created_at|date:"d.m.Y" }} / {{ post.author.user.username }}</p>
                 <p>{{ post.text|censor|truncatechars:50 }}</p>
+                <a href="{% url 'news:update_post' post.id %}">Редактировать </a>
+                <a href="{% url 'news:delete_post' post.id %}"> Удалить</a>
             </div>
         {% endfor %}
     {% else %}
         <h2>Список статей и новостей пуст =(</h2>
+    {% endif %}
+
+    {% if is_paginated %}
+
+        <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
+        {% if page_obj.has_previous %}
+            <a href="?page=1">Первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+        {% endif %}
+
+        <!-- Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу -->
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a>{{ num }}</a>
+            {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+        {% endif %}
+
     {% endif %}
 {% endblock content %}

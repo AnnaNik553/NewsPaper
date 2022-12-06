@@ -13,6 +13,9 @@ class Author(models.Model):
         self.rating = articles + comments + articles_comments
         self.save()
 
+    def __str__(self):
+        return f'{self.user}'
+
 
 class Category(models.Model):
     title = models.CharField(max_length=255, unique=True, verbose_name='название категории')
@@ -47,6 +50,9 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return f'/news/{self.id}'
 
 
 class PostCategory(models.Model):
