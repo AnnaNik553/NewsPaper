@@ -7,13 +7,19 @@
 {% endblock title %}
 
 {% block content %}
-    <p>Всего новостей <b>{{ posts|length }}</b></p>
+
+    <p>Всего новостей <b>{{ count }}</b></p>
+    <br>
+    <a href="{% url 'news:add_post' %}">Добавить статью / новость</a>
+    <hr>
     {% if posts %}
         {% for post in posts %}
             <div>
                 <h2><a href="{% url 'news:detail' post.id %}">{{ post.title|censor }}</a></h2>
                 <p>{{ post.created_at|date:"d.m.Y" }} / {{ post.author.user.username }}</p>
                 <p>{{ post.text|censor|truncatechars:50 }}</p>
+                <a href="{% url 'news:update_post' post.id %}">Редактировать </a>
+                <a href="{% url 'news:delete_post' post.id %}"> Удалить</a>
             </div>
         {% endfor %}
     {% else %}
