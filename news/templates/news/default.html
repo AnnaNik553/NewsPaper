@@ -25,6 +25,16 @@
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'news:all_news' %}">News</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'news:search' %}">Search</a></li>
+                        {% if user.is_authenticated %}
+                            {% if is_not_author %}
+                                <button> <a href="{% url 'app_accounts:become_author' %}">Стать автором</a> </button>
+                            {% endif %}
+                            <li class="nav-item"><a class="nav-link" href="/accounts/logout/">Logout</a></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="/accounts/login/">Login</a></li>
+                        {% endif %}
+
+
                     </ul>
                 </div>
             </div>
