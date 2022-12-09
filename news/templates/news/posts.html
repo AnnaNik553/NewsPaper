@@ -10,6 +10,18 @@
 
     <p>Всего новостей <b>{{ count }}</b></p>
     <br>
+    {% for category in categories %}
+    <a href="{% url 'news:all_news' category.id %}">{{ category.title }}</a>
+    {% endfor %}&nbsp;&nbsp;&nbsp;
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    {% if is_category %}
+        <a href="{% url 'news:subscribe' current_category.pk %}">Подписаться на рубрику "{{ current_category.title }}"</a>
+    {% endif %}
+    <hr>
     <a href="{% url 'news:add_post' %}">Добавить статью / новость</a>
     <hr>
     {% if posts %}
