@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django.contrib.sites',
+
     'django_filters',
 
     'allauth',
@@ -150,7 +152,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 
 ACCOUNT_FORMS = {'signup': 'accounts.forms.BasicSignupForm'}
 
@@ -159,3 +163,4 @@ EMAIL_PORT = 465
 EMAIL_HOST_USER = 'matoko18'
 EMAIL_HOST_PASSWORD = email_password
 EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'matoko18@yandex.ru'

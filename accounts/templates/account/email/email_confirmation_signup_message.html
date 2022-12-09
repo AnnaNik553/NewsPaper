@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение электронной почты</title>
+</head>
+<body>
+    {% load account %}
+    <h1>Благодарим за регистрацию {{ user.username }}!</h1>
+    <h2>Пожалуйста пройдите по <a href="{{ activate_url }}">ссылке</a> для активации аккаунта на NewsPaper</h2>
+    <p>Ссылка для активации будет доступна в течении трех дней.</p>
+    <p>Если вы не регистрировались на сайте NewsPaper.com, просто игнорируйте данное сообщение</p>
+</body>
+</html>
