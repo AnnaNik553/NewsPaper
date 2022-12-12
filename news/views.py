@@ -1,15 +1,14 @@
 from django.contrib import messages
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.mail import send_mail, send_mass_mail, EmailMultiAlternatives, EmailMessage, get_connection
-from django.template.loader import render_to_string
-from django.views.generic.edit import BaseUpdateView
+from django.contrib import messages
 
 from .models import Post, Category
 from .filters import PostFilter
 from .forms import PostForm
+from .utils import notifying_subscribers_about_news, can_author_create_post
 
 # Create your views here.
 
@@ -72,31 +71,17 @@ class PostCreateView(PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
-        self.object = form.save()
 
-        post_categories = self.object.categories.all()
-        subscribers = list(set(sum([list(category.subscribers.all()) for category in post_categories], [])))
-        if subscribers:
-            email_addresses_usernames = [(user.email, user.username) for user in subscribers if user.email]
+        if can_author_create_post(self.request.user):
 
-            letters = [render_to_string('news/letter.html', {'user': user[1], 'title': self.object.title, 'text': self.object.text}) for user in email_addresses_usernames]
+            self.object = form.save()
 
-            con = get_connection(fail_silently=True)
-            con.open()
+            notifying_subscribers_about_news(self.object, self.request.build_absolute_uri(self.object.get_absolute_url()))
 
-            emails = []
-            for user, letter in zip(email_addresses_usernames, letters):
-                em = EmailMultiAlternatives(subject=f'NewsPaper - {self.object.title}',
-                                  body=f'NewsPaper - {self.object.title}',
-                                  from_email='NewsPaperAdmin <matoko18@yandex.ru>',
-                                  to=[user[0]])
-                em.attach_alternative(letter, 'text/html')
-                emails.append(em)
-
-            con.send_messages(emails)
-            con.close()
-
-        return super().form_valid(form)
+            return super().form_valid(form)
+        else:
+            messages.error(self.request, 'Вы не можете публиковать более трех постов в день. Попробуйте завтра.')
+            return self.get(self, self.request)
 
 
 class PostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):

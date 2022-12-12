@@ -4,6 +4,11 @@
  
 {% block content %}
 <h3>Создание статьи / новости</h3>
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
 <form method="POST">
     {% csrf_token %} 
     {{ form.as_p }}
