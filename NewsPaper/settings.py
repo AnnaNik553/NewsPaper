@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'django_filters',
+    'django_apscheduler',
 
     'allauth',
     'allauth.account',
@@ -164,3 +165,7 @@ EMAIL_HOST_USER = 'matoko18'
 EMAIL_HOST_PASSWORD = email_password
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'matoko18@yandex.ru'
+
+# django_apscheduler
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
