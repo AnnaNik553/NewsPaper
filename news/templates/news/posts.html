@@ -1,6 +1,7 @@
 {% extends 'news/default.html' %}
 
 {% load custom_filters %}
+{% load cache %}
 
 {% block title %}
 Новости и статьи
@@ -10,9 +11,12 @@
 
     <p>Всего новостей <b>{{ count }}</b></p>
     <br>
-    {% for category in categories %}
-    <a href="{% url 'news:all_news' category.id %}">{{ category.title }}</a>
-    {% endfor %}&nbsp;&nbsp;&nbsp;
+    {% cache 300 category %}
+        {% for category in categories %}
+        <a href="{% url 'news:all_news' category.id %}">{{ category.title }}</a>
+        {% endfor %}
+    {% endcache %}
+    &nbsp;&nbsp;&nbsp;
     {% if messages %}
         {% for message in messages %}
             <p>{{ message }}</p>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load cache %}
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -22,9 +23,11 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        {% cache 300 nav %}
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'news:all_news' %}">News</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'news:search' %}">Search</a></li>
+                        {% endcache %}
                         {% if user.is_authenticated %}
                             {% if is_not_author %}
                                 <button> <a href="{% url 'app_accounts:become_author' %}">Стать автором</a> </button>

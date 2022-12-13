@@ -1,9 +1,9 @@
-from django.contrib import messages
 from django.shortcuts import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib import messages
+from django.core.cache import cache
 
 from .models import Post, Category
 from .filters import PostFilter
@@ -62,6 +62,15 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'news/post.html'
     context_object_name = 'post'
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+
+        return obj
 
 
 class PostCreateView(PermissionRequiredMixin, CreateView):
