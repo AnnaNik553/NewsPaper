@@ -169,3 +169,10 @@ DEFAULT_FROM_EMAIL = 'matoko18@yandex.ru'
 # django_apscheduler
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': BASE_DIR / 'cache_files',
+    }
+}
